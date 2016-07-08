@@ -15,6 +15,9 @@ module.exports = {
 
   // Ember Methods
 
+  /**
+   * If coverage enabled for an addon, add a preprocess tree to instrument addon files
+   */
   included: function() {
     if (this._isCoverageEnabled() && this.parent.isEmberCLIAddon()) {
       var coveredAddon = this.project.findAddonByName(this.project.pkg.name);
@@ -191,8 +194,6 @@ module.exports = {
       this._doesFileExistInCurrentProjectApp(relativePath) ||
       this._doesFileExistInCurrentProjectAddon(relativePath)
     );
-
-    console.log(!fileExists, name, relativePath);
 
     return !fileExists;
   },

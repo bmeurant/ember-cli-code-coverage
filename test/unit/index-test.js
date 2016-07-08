@@ -96,13 +96,13 @@ describe('index.js', function() {
     });
   });
 
-  describe('_doesFileExistInCurrentProject', function() {
+  describe('_doesFileExistInCurrentProjectApp', function() {
     describe('when file exists', function() {
       var result;
 
       beforeEach(function() {
         sandbox.stub(Index, '_existsSync').returns(true);
-        result = Index._doesFileExistInCurrentProject('adapters/application.js');
+        result = Index._doesFileExistInCurrentProjectApp('adapters/application.js');
       });
 
       it('uses path to file in app', function() {
@@ -124,7 +124,7 @@ describe('index.js', function() {
 
         beforeEach(function() {
           sandbox.stub(Index, '_doesTemplateFileExist').returns(true);
-          result = Index._doesFileExistInCurrentProject('templates/application.js');
+          result = Index._doesFileExistInCurrentProjectApp('templates/application.js');
         });
 
         it('uses path to file in app', function() {
@@ -141,11 +141,70 @@ describe('index.js', function() {
 
         beforeEach(function() {
           sandbox.stub(Index, '_doesTemplateFileExist').returns(false);
-          result = Index._doesFileExistInCurrentProject('templates/application.js');
+          result = Index._doesFileExistInCurrentProjectApp('templates/application.js');
         });
 
         it('uses path to file in app', function() {
           expect(Index._existsSync.lastCall.args).to.eql(['app/templates/application.js']);
+        });
+
+        it('returns false', function() {
+          expect(result).to.be.false;
+        });
+      });
+    });
+  });
+
+  describe('_doesFileExistInCurrentProjectAddon', function() {
+    describe('when file exists', function() {
+      var result;
+
+      beforeEach(function() {
+        sandbox.stub(Index, '_existsSync').returns(true);
+        result = Index._doesFileExistInCurrentProjectAddon('helpers/addon.js');
+      });
+
+      it('uses path to file in addon', function() {
+        expect(Index._existsSync.lastCall.args).to.eql(['addon/helpers/addon.js']);
+      });
+
+      it('returns true', function() {
+        expect(result).to.be.true;
+      });
+    });
+
+    describe('when file does not exist', function() {
+      beforeEach(function() {
+        sandbox.stub(Index, '_existsSync').returns(false);
+      });
+
+      describe('when template file exists', function() {
+        var result;
+
+        beforeEach(function() {
+          sandbox.stub(Index, '_doesTemplateFileExist').returns(true);
+          result = Index._doesFileExistInCurrentProjectAddon('templates/addon.js');
+        });
+
+        it('uses path to file in addon', function() {
+          expect(Index._existsSync.lastCall.args).to.eql(['addon/templates/addon.js']);
+        });
+
+        it('returns true', function() {
+          expect(result).to.be.true;
+        });
+      });
+
+      describe('when template file does not exist', function() {
+        var result;
+
+        beforeEach(function() {
+          sandbox.stub(Index, '_doesTemplateFileExist').returns(false);
+          result = Index._doesFileExistInCurrentProjectAddon('templates/addon.js');
+        });
+
+        it('uses path to file in addon', function() {
+          expect(Index._existsSync.lastCall.args).to.eql(['addon/templates/addon.js']);
         });
 
         it('returns false', function() {
@@ -250,7 +309,7 @@ describe('index.js', function() {
     });
   });
 
-  describe('_getEcludes', function() {
+  describe('_getExcludes', function() {
     beforeEach(function() {
       sandbox.stub(Index, '_filterOutAddonFiles').returns('test');
 
